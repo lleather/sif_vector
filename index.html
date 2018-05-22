@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Seasonality of Solar-Induced Chlorophyll Fluorescence</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/main.css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
+
+    <!-- External Libraries -->
+    <script src="js/d3.v4.js"></script>
+    <script src="js/leaflet.js"></script>
+    <script src="js/chroma.min.js"></script>
+
+    <!-- addtl libraries -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- favicon -->
+    <link rel="shortcut icon" href="img/1530-seedling.ico" type="image/x-icon">
+
+</head>
+<body>
+
+<!-- Coordinated View Geovisualization -->
+
+<div class="collapse navbar-collapse" id="navbarResponsive">
+
+    <div><br><p><br></p><br></div><br><br>
+    <h6>Count by Magnitude</h6>
+    <div id="mag-chart"></div>
+    <h6>Count by Frequency</h6>
+    <div id="depth-chart"></div>
+    <h6>Count by Months</h6>
+    <div id="date-chart"></div>
+
+    <!--Responsive Nav Items - Docked on Top Nav or Inside Nav Menu-->
+    <ul class="navbar-nav ml-auto">
+
+        <!-- OSU Geoviz and Cartography-->
+        <li class="nav-item">
+            <a class="nav-link" id="osu" href="http://geoviz.ceoas.oregonstate.edu" target="_blank">
+                <span><img src="img/logo-long.png" style="width:115.5px; height:25px;" class="d-inline-block align-top image-responsive"></span>
+            </a>
+        </li>
+
+    </ul>
+</div>
+
+    <!-- Create the Map div -->
+    <div id="map"></div>
+
+
+
+
+
+
+    <!-- Coordinated View Geoviz JavaScript -->
+    <script src="js/coordview.js"></script>
+
+    <!-- Leaflet CanvasLayer.Field JavaScript -->
+    <script src="js/leaflet.canvaslayer.field.js"></script>
+
+    <!-- Main Mapping JavaScript -->
+    <script src="js/main.js"></script>
+
+
+</body>
+</html>
