@@ -187,3 +187,32 @@ d3.json('assets/earthquakes.geojson', function(data) { // d3 v4 version
     });
 
 });
+
+
+////// ATTEMPT FOR .ASC RASTER DATA
+
+d3.text('assets/vector_field/july_jan_mag_simple.asc', function(data) { // d3 v4 version
+
+
+        //////////////////////////////////////////////////PREP THE DATA////////////////////////////////////////////////////////
+        //create crossfilter passes each feature to the filter. We have to pass it through the crossfilter before we can split up with data using
+        //the .dimensions() method
+        var filter = crossfilter(data); //passes the features to the crossfilter
+
+    //console.log(data);
+    console.log(filter);
+
+        // groups everything together into one group, this is used to quickly search all of the data at once
+        var all = filter.groupAll();
+
+        console.log(all);
+
+        //Takes each of the records of the dataset and returns each individual line so that they can be used. .dimension() puts
+        // the data into an easily searchable/manipulable format for DC
+        var everything = filter.dimension(function (d) {
+            return d
+        });
+
+        console.log(everything);
+
+    })

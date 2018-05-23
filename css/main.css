@@ -100,10 +100,13 @@ span.popupText {
     word-spacing: 0;
 }
 
+
 /* Hide the Leaflet attribution control */
+
 div.leaflet-control-attribution {
     display: none;
 }
+
 
 /* Hide the Leaflet zoom control */
 div.leaflet-control-zoom {

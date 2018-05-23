@@ -9,54 +9,74 @@
     <link rel="stylesheet" href="css/main.css" />
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" />
 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
     <!-- External Libraries -->
     <script src="js/d3.v4.js"></script>
     <script src="js/leaflet.js"></script>
     <script src="js/chroma.min.js"></script>
 
     <!-- addtl libraries -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- <script src="https://d3js.org/d3.v5.min.js"></script> can't use d3 v5 with canvas layer field -->
+
+    <script src="https://dc-js.github.io/dc.js/js/crossfilter.js"></script>
+    <script src="https://dc-js.github.io/dc.js/js/dc.js"></script>
 
     <!-- favicon -->
     <link rel="shortcut icon" href="img/1530-seedling.ico" type="image/x-icon">
 
 </head>
-<body>
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
 
-<!-- Coordinated View Geovisualization -->
+<!--Navbar-->
+<nav class="navbar navbar-expand-xl navbar-dark bg-dark fixed-top" id="mainNav">
+    <a class="navbar-brand" href="index.html"></a>
+    <button class="navbar-toggler navbar-toggler-left" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-<div class="collapse navbar-collapse" id="navbarResponsive">
+    <!--SideNav-->
+    <div class="collapse navbar-collapse" id="navbarResponsive">
 
-    <div><br><p><br></p><br></div><br><br>
-    <h6>Count by Magnitude</h6>
-    <div id="mag-chart"></div>
-    <h6>Count by Frequency</h6>
-    <div id="depth-chart"></div>
-    <h6>Count by Months</h6>
-    <div id="date-chart"></div>
 
-    <!--Responsive Nav Items - Docked on Top Nav or Inside Nav Menu-->
-    <ul class="navbar-nav ml-auto">
+            <!-- Coordinated View Geovisualization -->
+            <div><br><p><br></p><br></div><br><br>
 
-        <!-- OSU Geoviz and Cartography-->
-        <li class="nav-item">
-            <a class="nav-link" id="osu" href="http://geoviz.ceoas.oregonstate.edu" target="_blank">
-                <span><img src="img/logo-long.png" style="width:115.5px; height:25px;" class="d-inline-block align-top image-responsive"></span>
-            </a>
-        </li>
+            <h6>Count by Magnitude</h6>
+            <div id="mag-chart"></div>
+            <h6>Count by Frequency</h6>
+            <div id="depth-chart"></div>
+            <h6>Count by Months</h6>
+            <div id="date-chart"></div>
 
-    </ul>
-</div>
+
+            <!--Responsive Nav Items - Docked on Top Nav or Inside Nav Menu-->
+            <ul class="navbar-nav ml-auto">
+
+                <!-- OSU Geoviz and Cartography-->
+                <li class="nav-item">
+                    <a class="nav-link" id="osu" href="http://geoviz.ceoas.oregonstate.edu" target="_blank">
+                        <span><img src="img/logo-long.png" style="width:115.5px; height:25px;" class="d-inline-block align-top image-responsive"></span>
+                    </a>
+                </li>
+
+            </ul>
+
+    </div>
+</nav>
+
 
     <!-- Create the Map div -->
     <div id="map"></div>
 
 
-
-
+<!-- SCRIPTS -->
 
 
     <!-- Coordinated View Geoviz JavaScript -->
@@ -67,6 +87,11 @@
 
     <!-- Main Mapping JavaScript -->
     <script src="js/main.js"></script>
+
+
+    <!-- Coordinated View Geoviz JavaScript  - from ASCII file
+    <script src="js/coordview_raster.js"></script> -->
+
 
 
 </body>
