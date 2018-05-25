@@ -41,11 +41,30 @@ h2 {
     font-weight: 100;
 }
 
+h6 {
+    color: #10707f;
+}
+
 ul a {
     font-size: 16px;
     color: white;
 }
 
+/* social interaction */
+
+.social {
+
+    right: 10px;
+    top: 10px;
+}
+
+.facebook-square {
+    color: #0b212a;
+}
+
+.github-icon {
+    color: #0b212a;
+}
 
 /* No rounded borders */
 .leaflet-bar,
@@ -103,10 +122,11 @@ span.popupText {
 
 /* Hide the Leaflet attribution control */
 
+/*
 div.leaflet-control-attribution {
     display: none;
 }
-
+*/
 
 /* Hide the Leaflet zoom control */
 div.leaflet-control-zoom {
@@ -149,4 +169,10 @@ div.leaflet-control-layers {
 
 .legend b {
     color: #000000;
+}
+
+/*figures*/
+
+.bar {
+    fill: #7aa75f;
 }

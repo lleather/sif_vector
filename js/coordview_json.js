@@ -2,6 +2,7 @@
 //d3.json('assets/earthquakes.geojson').then(function(data) { // d3 v5 version
 d3.json('assets/vector_field/json/july_jan_mag_simple.geojson', function(data) { // d3 v4 version
 
+    // if i also load in the jan_july mag... and parse the data differently... i can show the seasonal patterns for both subsets / datasets.
 
     //////////////////////////////////////////////////PREP THE DATA////////////////////////////////////////////////////////
     //create crossfilter passes each feature to the filter. We have to pass it through the crossfilter before we can split up with data using
@@ -34,7 +35,7 @@ d3.json('assets/vector_field/json/july_jan_mag_simple.geojson', function(data) {
 
         //lamda operations are simple version of if/else statements. EX: If mag is less than 1.2 return the first element, else continue to the second element
         var sif = d.properties.NA; //sif is called "NA" in this file...
-        return sif < -1 ? '< - 1' :
+        return sif < -1 ? '< -1' :
             sif < -0.5 ? '-1 - -0.5' :
                 sif < 0 ? '-0.5 - 0' :
                     sif < 0.5 ? '0 - 0.5' :

@@ -28,7 +28,8 @@
     <script src="https://dc-js.github.io/dc.js/js/crossfilter.js"></script>
     <script src="https://dc-js.github.io/dc.js/js/dc.js"></script>
 
-    <!-- favicon -->
+    <!-- icons -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.12/js/all.js" integrity="sha384-Voup2lBiiyZYkRto2XWqbzxHXwzcm4A5RfdfG6466bu5LqjwwrjXCMBQBLMWh7qR" crossorigin="anonymous"></script>
     <link rel="shortcut icon" href="img/1530-seedling.ico" type="image/x-icon">
 
 </head>
@@ -48,16 +49,32 @@
             <!-- Coordinated View Geovisualization -->
             <div><br><p><br></p><br></div><br><br>
 
-            <h6>Pixel count by Monthly Value </h6>
-            <div id="sif-chart"></div>
-            <h6>Count by Frequency</h6>
-            <div id="site-chart"></div>
-            <h6>Count by Months</h6>
-            <div id="date-chart"></div>
+            <h6>Pixel value frequency<br>January to July greenup</h6>
+            <div id="sif-chart-n"></div>
+            <h6>Pixel value frequency<br>July to January greenup</h6>
+            <div id="sif-chart-s"></div>
+
+        <div class="social">
+            <dl>
+                <dt>
+                    <!--facebook icon-->
+                    <a class="fab fa-facebook-square facebook-square fa-fw fa-2x"
+                       href=https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Flleather.github.io%2Fsif_vector%2F&amp;src=sdkpreparse"
+                       target="_blank"></a>
+                </dt>
+                <dt>
+                    <!--github icon-->
+                    <a class="fab fa-github github-icon fa-fw fa-2x" href="https://github.com/lleather/sif_vector" style="top:55px"
+                       target="_blank"></a>
+                </dt>
+
+            </dl>
+        </div>
 
 
             <!--Responsive Nav Items - Docked on Top Nav or Inside Nav Menu-->
             <ul class="navbar-nav ml-auto">
+
 
                 <!-- OSU Geoviz and Cartography-->
                 <li class="nav-item">
@@ -95,8 +112,10 @@
     <!-- Coordinated View Geoviz JavaScript  - from time series at points file
     <script src="js/coordview_pts.js"></script> -->
 
-    <!-- Coordinated View Geoviz JavaScript  - from json from magnitude  file -->
-    <script src="js/coordview_json.js"></script>
+    <!-- Coordinated View Geoviz JavaScript  - from json from magnitude  file
+    <script src="js/coordview_json.js"></script> -->
+
+    <script src="js/coordview_json_v2.js"></script>
 
 
 </body>
