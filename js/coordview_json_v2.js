@@ -30,8 +30,8 @@ d3.json('assets/vector_field/json/july_jan_mag_simple.geojson', function(july_ma
 
             //lamda operations are simple version of if/else statements. EX: If mag is less than 1.2 return the first element, else continue to the second element
             var sif = d1.properties.NA; //sif is called "NA" in this file...
-            return sif < -1 ? '< -1' :
-                sif < -0.5 ? '-1 - -0.5' :
+            return sif < -1 ? '< -1.0' :
+                sif < -0.5 ? '-1.0 - -0.5' :
                     sif < 0 ? '-0.5 - 0' :
                         sif < 0.5 ? '0 - 0.5' :
                             sif < 1 ? '0.5 - 1' :
@@ -74,12 +74,12 @@ d3.json('assets/vector_field/json/july_jan_mag_simple.geojson', function(july_ma
 
             //lamda operations are simple version of if/else statements. EX: If mag is less than 1.2 return the first element, else continue to the second element
             var sif = d.properties.NA; //sif is called "NA" in this file...
-            return sif < -1 ? '< -1' :
-                sif < -0.5 ? '1 - -0.5' :
+            return sif < -1 ? '< -1.0' :
+                sif < -0.5 ? '-1.0 - -0.5' :
                     sif < 0 ? '-0.5 - 0' :
                         sif < 0.5 ? '0 - 0.5' :
-                            sif < 1 ? '0.5 - 1' :
-                                '>1'
+                            sif < 1 ? '0.5 - 1.0' :
+                                '>1.0'
         });
 
         //returns the geometry for each feature; this is the points at which sif was observed
