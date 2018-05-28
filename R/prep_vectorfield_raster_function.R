@@ -10,7 +10,7 @@ rm(list = ls())
 #create U and V rasters for vector direction
 
 
-
+#install.packages(c("raster", "tidyverse", "ndcf4", "ndcf4.helpers", "rgeos", "geojsonio"))
 #libraries
 library(raster)
 library(tidyverse)
@@ -25,7 +25,6 @@ data_dir <- "/Users/lilaleatherman/Documents/big_data/GOME_F/"
 proj_dir <- "/Users/lilaleatherman/Documents/BoxSync/current_projects_sync/flux_sif/"
 js_dir <- "/Volumes/classes/GEOG572/Students/leatherl/sif_vector/assets/vector_field/"
 
-
 #######################################################################
 
 ##
@@ -36,7 +35,7 @@ vector_UV <- function(r, type) {
   
   require(raster)
   
-  #load input magnitude vector of interest-- whatever you want to visualize
+  #load input raw magnitude raster of interest-- whatever you want to visualize
   #this should be a .asc file
   mag <- r
   
@@ -52,9 +51,6 @@ vector_UV <- function(r, type) {
   mag_abs <- raster::calc(mag_t , fun=function(x){x -270})
   
   
-  # calc direction of movement
-  # calculated as initial raster * cos(direction)
-  
   # V raster: vector magnitude. 
   # calculated as sin(theta) * input 
   mag_v <- overlay(mag_abs, mag, fun=function(x, y){sin(x) * y})
@@ -66,7 +62,6 @@ vector_UV <- function(r, type) {
   ifelse(out == "v", return(mag_v), 
          ifelse(out == "u", return(mag_u), 
                 NA))
-  
   
 }
 
@@ -169,19 +164,24 @@ july_mean <- mean(july_stack2, na.rm=TRUE)
 
 ##################################################
 
-#### CALC MAGNITUDE RASTER FOR VECTOR
+#### CALC RAW MAGNITUDE RASTER FOR VECTOR
 
 ##################################################
 
 #set magnitude raster of interest
 july_jan_mag <- july_mean - jan_mean
 
+## input raster load from file: 
+july_jan_mag <- raster(paste0(js_dir, "july_jan_mag_simple.asc"))
+
+# convert to .asc for visualization, if necessary
+writeRaster(july_jan_mag, paste0(js_dir, "july_jan_mag_simple.asc"), overwrite = TRUE)
+
 # #inspect
 #plot(july_jan_mag)
 
 #set projection
 #scalar field needs EPSG 4326
-
 proj <- "+init=EPSG:4326 +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
 crs(july_jan_mag) <- proj
 
@@ -199,7 +199,7 @@ crs(jan_july_mag) <- proj
 ##### CALC VECTORS OF INTEREST
 ##
 
-#named for the order of subtraction in calculating the seasonal greenup
+#rasters are named for the order of subtraction in calculating the seasonal greenup
 
 july_jan_mag_u <- vector_UV(july_jan_mag, "u")
 july_jan_mag_v <- vector_UV(july_jan_mag, "v")
@@ -213,11 +213,6 @@ jan_july_mag_v <- vector_UV(jan_july_mag, "v")
 ####
 #######EXPORT
 ####
-
-writeRaster(july_jan_mag_u, paste0(proj_dir, "data/processed_sif_data/vector_rasters/july_jan_mag_u.asc"), overwrite = TRUE)
-writeRaster(july_jan_mag_v, paste0(proj_dir, "data/processed_sif_data/vector_rasters/july_jan_mag_v.asc"), overwrite = TRUE)
-writeRaster(july_jan_mag, paste0(proj_dir, "data/processed_sif_data/vector_rasters/july_jan_mag_simple.asc"), overwrite = TRUE)
-
 
 #export to javascript directory
 writeRaster(july_jan_mag_u, paste0(js_dir, "july_jan_mag_u.asc"), overwrite = TRUE)
@@ -233,8 +228,11 @@ writeRaster(jan_mean, paste0(js_dir, "jan_mean.asc"), overwrite = TRUE)
 
 
 #export as to geojson for visualization in dc / crossfilter
-r_pts <- rasterToPoints(july_jan_mag)
-geojson_write(r_pts, file = paste0(js_dir, "json/july_jan_mag_simple.geojson"))
+
+# convert raster to points so that it can be converted to geojson
+july_jan_mag_pts <- rasterToPoints(july_jan_mag)
+# export as geojson
+geojson_write(july_jan_mag_pts, file = paste0(js_dir, "json/july_jan_mag_simple.geojson"))
 
 #export as to geojson for visualization in dc / crossfilter
 r_pts <- rasterToPoints(jan_july_mag)
