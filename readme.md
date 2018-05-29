@@ -90,7 +90,6 @@ library(geojsonio)
 E.g., 
 
 ```r 
-proj_dir <- "/Users/lilaleatherman/Documents/BoxSync/current_projects_sync/flux_sif/"
 js_dir <- "/Volumes/classes/GEOG572/Students/leatherl/sif_vector/assets/vector_field/"
 ```
 
@@ -212,6 +211,90 @@ geojson_write(july_jan_mag_pts, file = paste0(js_dir, "json/july_jan_mag_simple.
 ```
 
 Now your data are ready to be visualized in the Vector Field framework!
+
+#### 5 Building the vector field visualization: 
+
+**5.1 Tutorial** My scripts are a little more complex because I load in multiple vector sets to compare. [Brian's vector field tutorial](https://github.com/briangkatz/vector-field-animation#3-a-function-by-function-tutorial) gives a more streamlined view of the process for visualizing a single vector field input. 
+
+**Note:** To visualize the vector animation, the Vector Field package only needs the **u** and **v** input rasters. It also provides the .getScalarField() function to back-calculate the raw magnitude raster from the input u and v rasters. However, I found that the magnitude raster derived from this function differed from the raw magnitude input that I used to calculate the vector field rasters. Until I figure out why this is, to resolve the problem, I have simply visualized the raw magnitude input raster tiled under the vector field animation. 
+
+**5.2 Visualizing multiple input types in the vector field / scalar field framework** of the **cool things** about this package is that you can read in as many additional inputs as you like, as long as you close the brackets at the end. For example:
+
+```js
+// ScalarField derived from a Vectorfield (from IHCantabria Leaflet.CanvasLayer.Field)
+d3.text('assets/vector_field/output_asc/july_jan_mag_u.asc', function (u_n) { // add the U data in ASCIIGrid (.asc) format
+    d3.text('assets/vector_field/output_asc/july_jan_mag_v.asc', function (v_n) { // add the V data in ASCIIGrid (.asc) format (if you want to see a flowing example, replace the V data with the v data (arag_2050_07_v_original.asc)
+        d3.text('assets/vector_field/input_asc/july_mean.asc', function (jul_mean) { // add in another magnitude / scalar field raster to visualize - for each subsequent input, you have to add / nest an additional d3.text() command. be sure to end with another )}; at the end!
+            
+           var toMetersPerSecond = 1; // coefficient multiplied with the U and V data to determine the speed (magnitude) of the animated vector field; 
+            
+                    ////// for northern hemisphere visualization:    aka: july - january greenup
+
+                    var vf_n = L.VectorField.fromASCIIGrids(u_n, v_n, toMetersPerSecond);  // create the vector field
+
+                    // a) First derived field: Magnitude (m/s, or difference in SIF from jan to july)
+                    var s_n = vf_n.getScalarField('magnitude');  // << derived ScalarField
+
+                    var magnitude_n = L.canvasLayer.scalarField(s_n, {
+                        color : chroma.scale(
+                        ['#EDF0AD', '#E4F132', '#98CA32', '#559E54', '#10570F'], [-1, -0.5, 0, 0.5, 1.3]  // set color scale and break points for styling of magnitude layer
+                        ),
+                        opacity: 0.75, // 1 will block view of animation if magnitude layer is selected and brought to the front of the map object
+                    interpolate: true, // uses bilinear interpolation to create a smoother-appearing surface
+                    }).addTo(map);  // addTo(map) displays the layer on page-load vs. removing it keeps the layer off the map until the check-box is selected in the Leaflet layer control (see direction layer below for example)*/
+
+            // d) additional magnitude / raster field
+                    var jul_n = L.ScalarField.fromASCIIGrid(jul_mean);
+                    var july_mean = L.canvasLayer.scalarField(jul_n, {
+                            color: chroma.scale(
+                                ['#EDF0AD', '#E4F132', '#98CA32', '#559E54', '#10570F'], [-1, -0.5, 0, 0.5, 1.3]  // set color scale and break points for styling of magnitude layer
+                            ),
+                         opacity: 0.75, // 1 will block view of animation if magnitude layer is selected and brought to the front of the map object
+                        interpolate: true, // uses bilinear interpolation to create a smoother-appearing surface
+                        });
+            });
+        });
+    }); // ends data input blocks
+
+```
+
+**5.3 Grouping layers in the Leaflet layer control**
+
+When you have added in all these fun different layers, you might want to be able to turn them on and off in [groups](https://leafletjs.com/examples/layers-control/)-- rather than one at a time, especially if you're comparing disparate phenomena, or want to turn the magnitude and vector layers on and off at the same time. 
+
+The command L.layerGroup([]) makes this possible:
+
+```js 
+// e) Layer control
+
+        // Define layer groups - group layers so that they are toggled on and off together
+
+        var seasonal_nhemis = L.layerGroup([animation_n, magnitude_n]);
+        var seasonal_shemis = L.layerGroup([animation_s, magnitude_s]); // stand in for southern hemisphere greenup
+```
+
+In the script above, each of the "animation_n" or "magnitude_n" layers are single Leaflet canvas layers.
+
+We then use these groups in the L.control.layers() function. We can name the layers in the Layer Control to clarify what they refer to. We can also combine Layer Groups with non-grouped layers. 
+
+The previous, non-grouped iteration of the Layer Control is commented out below.
+
+```js 
+L.control.layers({}, {
+        //    "Vector animation": animation,
+        //    "Derived magnitude": magnitude,
+        //    "Derived direction": direction,
+        //    "July Mean": julymean,
+            "Seasonal Greenup: Northern Hemisphere": seasonal_nhemis,
+            "Seasonal Greenup: Southern Hemisphere": seasonal_shemis,
+            "July Mean": july_mean,
+            "January Mean" : jan_mean
+        }, {
+            position: 'bottomleft',  // change to your preference
+            collapsed: false  // false always displays check-boxes for the animation, magnitude, and direction layers; true creates a layer-selector icon which hides these check-boxes until hovered over or clicked on
+        }).addTo(map);
+
+```
 
 
 

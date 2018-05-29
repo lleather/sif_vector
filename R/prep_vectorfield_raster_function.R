@@ -16,8 +16,6 @@ library(geojsonio)
 
 #SET DIRECTORIES
 
-data_dir <- "/Users/lilaleatherman/Documents/big_data/GOME_F/"
-proj_dir <- "/Users/lilaleatherman/Documents/BoxSync/current_projects_sync/flux_sif/"
 js_dir <- "/Volumes/classes/GEOG572/Students/leatherl/sif_vector/assets/vector_field/"
 
 #######################################################################

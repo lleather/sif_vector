@@ -56,18 +56,18 @@ d3.text('assets/vector_field/output_asc/july_jan_mag_u.asc', function (u_n) { //
                     // a) First derived field: Magnitude (m/s, or difference in SIF from jan to july)
                     var s_n = vf_n.getScalarField('magnitude');  // << derived ScalarField
 
-                    // // custom scale, based on 'earth.nullschool.net' (example:  https://earth.nullschool.net/#current/ocean/surface/currents/overlay=currents/equirectangular=-11.95,29.62,1112)
-                    // var magnitude_n = L.canvasLayer.scalarField(s_n, {
-                    //     //color: chroma.scale(
-                    //         //    ['#E0631D', '#E0631D', '#A5BF15', '#FFFFFF', '#C9F5F6'], [-1.5, -1, 0, 0.5, 1]  // set color scale and break points for styling of magnitude layer
-                    //         //),
-                    //         //color: chroma.scale('YlGn', [-1.5, -1, 0, 0.5, 1]).gamma(0.75),
-                    //     color : chroma.scale(
-                    //     ['#EDF0AD', '#E4F132', '#98CA32', '#559E54', '#10570F'], [-1, -0.5, 0, 0.5, 1.3]  // set color scale and break points for styling of magnitude layer
-                    //     ),
-                    //     opacity: 0.75, // 1 will block view of animation if magnitude layer is selected and brought to the front of the map object
-                    // interpolate: true, // uses bilinear interpolation to create a smoother-appearing surface
-                    // }).addTo(map);  // addTo(map) displays the layer on page-load vs. removing it keeps the layer off the map until the check-box is selected in the Leaflet layer control (see direction layer below for example)
+                    // custom scale, based on 'earth.nullschool.net' (example:  https://earth.nullschool.net/#current/ocean/surface/currents/overlay=currents/equirectangular=-11.95,29.62,1112)
+                    var magnitude_n = L.canvasLayer.scalarField(s_n, {
+                        //color: chroma.scale(
+                            //    ['#E0631D', '#E0631D', '#A5BF15', '#FFFFFF', '#C9F5F6'], [-1.5, -1, 0, 0.5, 1]  // set color scale and break points for styling of magnitude layer
+                            //),
+                            //color: chroma.scale('YlGn', [-1.5, -1, 0, 0.5, 1]).gamma(0.75),
+                        color : chroma.scale(
+                        ['#EDF0AD', '#E4F132', '#98CA32', '#559E54', '#10570F'], [-1, -0.5, 0, 0.5, 1.3]  // set color scale and break points for styling of magnitude layer
+                        ),
+                        opacity: 0.75, // 1 will block view of animation if magnitude layer is selected and brought to the front of the map object
+                    interpolate: true, // uses bilinear interpolation to create a smoother-appearing surface
+                    }).addTo(map);  // addTo(map) displays the layer on page-load vs. removing it keeps the layer off the map until the check-box is selected in the Leaflet layer control (see direction layer below for example)*/
 
                                 // a2) addlt load of calculated magnitude raster...
                                 var mag_n2 = L.ScalarField.fromASCIIGrid(july_jan_mag);
@@ -271,22 +271,6 @@ d3.text('assets/vector_field/output_asc/july_jan_mag_u.asc', function (u_n) { //
 });
 
 // ends sections adding the data
-
-//// PRIORITY: how to make this a multiple view? add addtl divs? to display:
-// time series? and/or
-// "months above SIF = 1 W/m^2/s
-// pixels above XX value in window?
-
-
-//mult view tables on bottom of window div
-
-//// next up: choose appropriate projection / basemap for data
-
-
-
-////
-
-//// add credit at bottom
 
 
 //// note: coordinated view example uses d3 v5. scalar field vector depends on d3 v4.
