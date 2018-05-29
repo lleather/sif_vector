@@ -33,16 +33,16 @@ map.fitBounds(bounds);  // fit the map bounds to the bounding box specified
 
 
 // ScalarField derived from a Vectorfield (from IHCantabria Leaflet.CanvasLayer.Field)
-d3.text('assets/vector_field/july_jan_mag_u.asc', function (u_n) { // add the U data in ASCIIGrid (.asc) format
-    d3.text('assets/vector_field/july_jan_mag_v.asc', function (v_n) { // add the V data in ASCIIGrid (.asc) format (if you want to see a flowing example, replace the V data with the v data (arag_2050_07_v_original.asc)
-        d3.text('assets/vector_field/july_mean.asc', function (jul_mean) { // add in another magnitude / scalar field raster to visualize - for each subsequent input, you have to add / nest an additional d3.text() command. be sure to end with another )}; at the end!
+d3.text('assets/vector_field/output_asc/july_jan_mag_u.asc', function (u_n) { // add the U data in ASCIIGrid (.asc) format
+    d3.text('assets/vector_field/output_asc/july_jan_mag_v.asc', function (v_n) { // add the V data in ASCIIGrid (.asc) format (if you want to see a flowing example, replace the V data with the v data (arag_2050_07_v_original.asc)
+        d3.text('assets/vector_field/input_asc/july_mean.asc', function (jul_mean) { // add in another magnitude / scalar field raster to visualize - for each subsequent input, you have to add / nest an additional d3.text() command. be sure to end with another )}; at the end!
 
-            d3.text('assets/vector_field/jan_july_mag_u.asc', function (u_s) {
-                d3.text('assets/vector_field/jan_july_mag_v.asc', function (v_s) {
-                    d3.text('assets/vector_field/jan_mean.asc', function (ja_mean) {
+            d3.text('assets/vector_field/output_asc/jan_july_mag_u.asc', function (u_s) {
+                d3.text('assets/vector_field/output_asc/jan_july_mag_v.asc', function (v_s) {
+                    d3.text('assets/vector_field/input_asc/jan_mean.asc', function (ja_mean) {
                         // load in pre-calculated magnitude rasters; back-calculation doesn't provide same output. more a problem for the jan_july_mag
-                        d3.text('assets/vector_field/jan_july_mag_simple.asc', function (jan_july_mag) {
-                            d3.text('assets/vector_field/july_jan_mag_simple.asc', function (july_jan_mag) {
+                        d3.text('assets/vector_field/input_asc/jan_july_mag_simple.asc', function (jan_july_mag) {
+                            d3.text('assets/vector_field/input_asc/july_jan_mag_simple.asc', function (july_jan_mag) {
 
 
 

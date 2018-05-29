@@ -26,17 +26,14 @@ The bar charts display frequency tables of the pixel values that represent the m
 
 Data prep was executed in [R](https://github.com/lleather/sif_vector/blob/master/R/prep_vectorfield_raster_function.R). The data prep involved: 
 
-- averaging and stacking the january and july rasters, calculating mean rasters for january and july, and calculating the magnitude of seasonal greenup. 
+- averaging and stacking january and july rasters for 2010-2013, calculating mean rasters for january and july, and calculating the magnitude of seasonal greenup. 
 - calculating *u* and *v* rasters for the vector field calculation. I executed this by writing a function to convert the raster representing the magnitude of the season greenup to vector magnitude and direction. [Brian Katz's vector field tutorial](https://github.com/briangkatz/vector-field-animation) and personal help was invaluable in this process.
 
 
 
 ### 4. Vector field animation tutorial  
 
-This project uses the Vector Field Animation and Scalar Field derivation developed by [IH Cantabria](https://github.com/IHCantabria/Leaflet.CanvasLayer.Field). This package was interpreted by [Brian Katz](https://github.com/briangkatz/vector-field-animation), who developed an excellent tutorial for implementing this utility. My project draws from and expands upon this tutorial to: 
-
-* use an R script for input data processing
-* visualize additional layers alongside the vector field animation
+This project uses the Vector Field Animation and Scalar Field derivation developed by [IH Cantabria](https://github.com/IHCantabria/Leaflet.CanvasLayer.Field). This package was interpreted by [Brian Katz](https://github.com/briangkatz/vector-field-animation), who developed an excellent tutorial for implementing this utility.
 
 
 
@@ -46,7 +43,7 @@ Vector field animation is a method of visualizing the *magnitude* and *direction
 
 
 
-#### 4.2 Preparing inputs: background
+#### 4.2 Vector field background
 
 To use the Vector Field utility, you must create input rasters that represent both the *magnitude* and the *direction* of the vector that you wish you visualize. You cannot simply input your raw raster. Importantly, the Vector Field utility uses inputs in ASCII (.asc) format.
 
@@ -65,19 +62,30 @@ Brian provides a great explanation of vectors:
 
 
 
-While GUI-based GIS softwares can execute this task, script-based analysis streamlines this process. The [R](https://www.r-project.org/) coding environment includes a [raster](https://cran.r-project.org/web/packages/raster/index.html) package that is ideal for processing and analyzing raster data. The scripting environment also means that it is a straightforward to convert between file types and projections. 
+While GUI-based GIS softwares can execute this task, script-based analysis streamlines this process. The [R](https://www.r-project.org/) coding environment includes a [raster](https://cran.r-project.org/web/packages/raster/index.html) package that is ideal for processing and analyzing raster data.
 
-#### 4.3 Preparing inputs: practice
+The workflow is as follows:
+
+![workflow](img/VectorFieldWorkflow.png)
+
+Workflow designed by [Bran Black](https://github.com/BranBlack3125).
+
+#### 4.3 Preparing vector inputs using R
 
 In your R coding environment ([R Studio](https://www.rstudio.com/) is strongly recommended), open a new script. 
 
-**4.3.1 First, load the necessary libraries.** If you do not already have the requisite libraries installed, you can install them using the command: 
+**4.3.1 First, load the necessary libraries.** If you do not already have the requisite libraries installed, you can install them using the install.packages() command (commented out below): 
+
+The package geojsonio has a lot of dependencies, and make take some trouble-shooting and installing supporting packages in order to get it to load. 
 
 ```r 
-install.packages(c("raster", "tidyverse", "ndcf4", "ndcf4.helpers", "rgeos", "geojsonio")) 
+#install.packages(c("raster", "geojsonio"))
+#libraries
+library(raster)
+library(geojsonio)
 ```
 
-**4.3.2** Then **create objects that name the directories where you will be working.** Rather than setting the working directory (e.g, setwd()), I prefer to do this, so that I have more control over where objects are exported, and because naming the directories explicitly works better in an [R Markdown](https://rmarkdown.rstudio.com/) framework. I use separate directories for my working directory, and the directory for this project 
+**4.3.2** Then **create objects that name the directories where you will be working.** I prefer to do this, rather than setting the working directory (e.g, setwd()), so that I have more control over where objects are exported, and because naming the directories explicitly works better in an [R Markdown](https://rmarkdown.rstudio.com/) framework. I use separate directories for my working directory, and the directory for this project 
 
 E.g., 
 
@@ -85,8 +93,6 @@ E.g.,
 proj_dir <- "/Users/lilaleatherman/Documents/BoxSync/current_projects_sync/flux_sif/"
 js_dir <- "/Volumes/classes/GEOG572/Students/leatherl/sif_vector/assets/vector_field/"
 ```
-
-This means that you can directly access your assets folder. 
 
 **4.3.4** The **function used to calculate ** the **u** and **v** rasters is below. This function takes as an input: 
 
@@ -117,7 +123,10 @@ vector_UV <- function(r, type) {
   mag_t <- terrain(mag, opt = "aspect", unit = "degrees")
   
   #adjust angle of movement for theta raster - default is off by 90 degrees
-  mag_abs <- raster::calc(mag_t , fun=function(x){x - 270})
+  mag_abs <- raster::calc(mag_t , fun=function(x){x -270})
+  
+  # calc direction of movement
+  # calculated as initial raster * cos(direction)
   
   # V raster: vector magnitude. 
   # calculated as sin(theta) * input 
@@ -136,16 +145,7 @@ vector_UV <- function(r, type) {
 
 You can copy this function directly into your R script. You will call it to calculate your vector rasters of interest. 
 
-**4.3.5** next section in the [R script](https://github.com/lleather/sif_vector/blob/master/R/prep_vectorfield_raster_function.R) was used to process the input data, by:
-
-1. Listing all raster files in the directory 
-2. Grouping them, or creating raster **stacks** by the months of interest (January and July)
-3. Calculating a **mean raster stack** for each month.
-4. Calculating a raw magnitude raster for input to the vector field calculator. My raw magnitude raster is the seasonal difference in solar-induced chlorophyll fluorescence between July and January. So, I named the rasters for the order of subtraction that I used between the two months. 
-
-If you already have your raw magnitude raster prepared, you can skip the "Prep Input Data" Section. 
-
-**4.3.6** **Load your data.**
+**4.3.5 Load your data.**
 
 The raster() command loads in raster format files. Your raw magnitude input raster can be in any raster format; we will convert it to .asc later. 
 
@@ -153,17 +153,18 @@ Load in your input raster:
 
 ```r 
 ## input raster load from file: 
-july_jan_mag <- raster(paste0(js_dir, "july_jan_mag_simple.asc"))
+july_jan_mag <- raster(paste0(js_dir, "input_asc/july_jan_mag_simple.asc"))
 ```
 
 Though the Vector Field utility calculates a derived raw magnitude layer to visualize, this looks distinct from the raw input raster (for a reason that I haven't yet figured out). Thus, I am still plotting the original input raster under my vector field animation-- which also needs to be in .asc format. If you would like to do the same, you can export your input file as a .asc file using the writeRaster() function. 
 
 ```r 
 # convert to .asc for visualization, if necessary
-writeRaster(july_jan_mag, paste0(js_dir, "july_jan_mag_simple.asc"), overwrite = TRUE)
+writeRaster(july_jan_mag, paste0(js_dir, "input_asc/july_jan_mag_simple.asc"), overwrite = TRUE)
+
 ```
 
-**4.3.7 Set the projection.** The vector field calculation function in R needs the input rasters to have a projection specified. The Vector Field utility in js requires EPSG 4326. 
+**4.3.6 Set the projection.** The vector field calculation function in R needs the input rasters to have a projection specified. The Vector Field utility in js requires EPSG 4326. 
 
 ``` r
 #set projection
@@ -171,27 +172,23 @@ writeRaster(july_jan_mag, paste0(js_dir, "july_jan_mag_simple.asc"), overwrite =
 proj <- "+init=EPSG:4326 +proj=longlat +datum=WGS84 +ellps=WGS84 +towgs84=0,0,0"
 crs(july_jan_mag) <- proj
 ```
-
-**4.3.8 Calculate the u and v rasters for input to the Vector Field utility**.
-
-Now that we have the function written and our raw magnitude rasters loaded, we have to put the two together. Make sure to assign the results of the function to a new object.
+**4.3.7 Calculate your vectors.** Now that you have your raster loaded and in the correct projection, the next thing to do is to use the function to calculate your vectors. Because we wrote it above, all we have to do is call the function on our raw magnitude vectors of interest, being sure to *specify the type of vector we want* and *assigning the results to a new object.*
 
 ```r 
 ##
 ##### CALC VECTORS OF INTEREST
 ##
 
-#rasters are named for the order of subtraction in calculating the seasonal greenup
-
 july_jan_mag_u <- vector_UV(july_jan_mag, "u")
 july_jan_mag_v <- vector_UV(july_jan_mag, "v")
+
+jan_july_mag_u <- vector_UV(jan_july_mag, "u")
+jan_july_mag_v <- vector_UV(jan_july_mag, "v")
 ```
 
+**4.3.8 Export your files as .asc**
 
-
-**4.3.9 Export your calculated rasters for input into the Vector Field utility.**
-
-The writeRaster() function exports your rasters to your directory of choice.
+The command writeRaster() in the raster package exports raster files in the format specified. Luckily, here we can export directly to .asc format. Be sure to export both the u and v files!
 
 ```r
 ####
@@ -199,22 +196,22 @@ The writeRaster() function exports your rasters to your directory of choice.
 ####
 
 #export to javascript directory
-writeRaster(july_jan_mag_u, paste0(js_dir, "july_jan_mag_u.asc"), overwrite = TRUE)
-writeRaster(july_jan_mag_v, paste0(js_dir, "july_jan_mag_v.asc"), overwrite = TRUE)
+writeRaster(july_jan_mag_u, paste0(js_dir, "output_asc/july_jan_mag_u.asc"), overwrite = TRUE)
+writeRaster(july_jan_mag_v, paste0(js_dir, "output_asc/july_jan_mag_v.asc"), overwrite = TRUE)
 ```
 
-**4.3.10 If desired, convert and export your rasters as GeoJSON for visualization using DC / crossfilter.** 
+**4.3.9 Export your files as .geojson**
 
-DC and crossfilter interface well with GeoJSON files for calculating area statistics. To visualize any one of your rasters using these utilities, you first convert them from a raster to a list of points with the x and y coordinates and value at each point. Then, you export as a GeoJson format using geojson_write() from the [geojsonio](https://cran.r-project.org/web/packages/geojsonio/index.html) package. 
+Most .js utilities for visualizing data in a coordinated view framework depend on data in a .geojson or a vector format-- not a raster format. However, we can convert our raster data into .geojson in R. This means that our data are stored as lists of points with values, rather than a grid. To do this, we first have to convert our raster data to points, and then use a function to write the output as a .geojson files. This function comes from the geojsonio package.
 
-```r 
-#export as to geojson for visualization in dc / crossfilter
-
+```r
 # convert raster to points so that it can be converted to geojson
 july_jan_mag_pts <- rasterToPoints(july_jan_mag)
 # export as geojson
 geojson_write(july_jan_mag_pts, file = paste0(js_dir, "json/july_jan_mag_simple.geojson"))
 ```
 
-#### 4.4 Vector Field Utility: getting it online
+Now your data are ready to be visualized in the Vector Field framework!
+
+
 
