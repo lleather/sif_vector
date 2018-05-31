@@ -275,4 +275,10 @@ d3.text('assets/vector_field/output_asc/july_jan_mag_u.asc', function (u_n) { //
 
 //// note: coordinated view example uses d3 v5. scalar field vector depends on d3 v4.
 
-//
+//// add popup about -- vs dedicated info page?
+
+// time series at points
+
+// expand nav bar to hold time series?
+
+// time series at points-- on click, add to long-ass chart in the nav bar?

@@ -10,6 +10,26 @@ body {
     position: absolute;
     top: 0;
     left: 0;
+
+    z-index: 900;     /*a larger z-index than the container*/
+    display: block;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: #f5f5f5
+}
+
+.storymap-map {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: 900;     /*a larger z-index than the container*/
+    display: block;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    background-color: #f5f5f5;
 }
 
 .title {
@@ -50,7 +70,7 @@ ul a {
     color: white;
 }
 
-/* social interaction */
+/* social tab buttons */
 
 .social {
 
@@ -63,6 +83,10 @@ ul a {
 }
 
 .github-icon {
+    color: #0b212a;
+}
+
+.fa-info-circle {
     color: #0b212a;
 }
 
@@ -175,4 +199,11 @@ div.leaflet-control-layers {
 
 .bar {
     fill: #7aa75f;
+}
+
+
+/* boot strap */
+
+.row {
+    margin: auto;
 }
